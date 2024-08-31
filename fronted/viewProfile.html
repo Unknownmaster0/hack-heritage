@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>View Your Profile</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="bg-gray-100">
+    <div class="max-w-3xl mx-auto bg-white p-8 mt-10 shadow-lg rounded-lg">
+      <h1 class="text-3xl font-bold text-center mb-6">Resume</h1>
+
+      <!-- Personal Information -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Personal Information</h2>
+        <div class="mb-4">
+          <h3 class="text-xl font-bold">Full Name</h3>
+          <p id="name" class="text-gray-700"></p>
+        </div>
+        <div class="mb-4">
+          <h3 class="text-xl font-bold">Email</h3>
+          <p id="email" class="text-gray-700"></p>
+        </div>
+        <div class="mb-4">
+          <h3 class="text-xl font-bold">Phone Number</h3>
+          <p id="phone" class="text-gray-700"></p>
+        </div>
+        <div class="mb-4">
+          <h3 class="text-xl font-bold">Address</h3>
+          <p id="address" class="text-gray-700"></p>
+        </div>
+      </section>
+
+      <!-- About Me -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">About Me</h2>
+        <p id="about" class="text-gray-700"></p>
+      </section>
+
+      <!-- Career History -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Career History</h2>
+        <p id="career_history" class="text-gray-700"></p>
+      </section>
+
+      <!-- Education & Training -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Education & Training</h2>
+        <p id="education" class="text-gray-700"></p>
+      </section>
+
+      <!-- Related Skills -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Related Skills</h2>
+        <p id="skills" class="text-gray-700"></p>
+      </section>
+
+      <!-- Personal References -->
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Personal References</h2>
+        <p id="references" class="text-gray-700"></p>
+      </section>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Retrieve email from localStorage
+        const userEmail = localStorage.getItem("userEmail");
+
+        if (!userEmail) {
+          console.error("User email not found in localStorage");
+          return;
+        }
+
+        // Fetch user data from the backend API
+        fetch("http://localhost:8000/api/getProfile", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email: userEmail }),
+          credentials: "include",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(`data has reached here.`);
+            console.log(data);
+            // Populate the HTML elements with the data
+            document.getElementById("name").textContent = data.name || "N/A";
+            document.getElementById("email").textContent = data.email || "N/A";
+            document.getElementById("phone").textContent = data.phone || "N/A";
+            document.getElementById("address").textContent =
+              data.address || "N/A";
+            document.getElementById("about").textContent = data.about || "N/A";
+            document.getElementById("career_history").textContent =
+              data.careerHistory || "N/A";
+            document.getElementById("education").textContent =
+              data.education || "N/A";
+            document.getElementById("skills").textContent =
+              data.skills || "N/A";
+            document.getElementById("references").textContent =
+              data.references || "N/A";
+          })
+          .catch((error) => {
+            console.error("Error fetching profile data:", error);
+          });
+      });
+    </script>
+  </body>
+</html>
